@@ -23,7 +23,10 @@ const createUserCookie = (req: express.Request, res: express.Response) => {
 
   res.cookie("same", token, {
     httpOnly: false,
-    domain: process.env.CLIENT_URL,
+    domain:
+      process.env.NODE_ENV === "production"
+        ? process.env.CLIENT_URL
+        : "localhost",
     maxAge: maxAge * 1000,
   });
 
