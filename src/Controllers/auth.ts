@@ -21,7 +21,9 @@ const createUserCookie = (req: express.Request, res: express.Response) => {
   const { token, accountInfo, maxAge } = req.user as Info;
   console.log(maxAge);
 
-  res.cookie("same", token, { domain: "https://same-client-ui.vercel.app" });
+  res.cookie("same", token, {
+    maxAge: maxAge * 1000,
+  });
 
   res.json(accountInfo);
 };
