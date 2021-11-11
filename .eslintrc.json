@@ -21,7 +21,9 @@
     "import/extensions": "off",
     "func-names": "off",
     "no-underscore-dangle": "off",
-    "class-methods-use-this": "off"
+    "class-methods-use-this": "off",
+    "camelcase": "off",
+    "consistent-return": "off"
   },
   "settings": {
     "import/parsers": {

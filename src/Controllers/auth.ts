@@ -1,10 +1,9 @@
 import express from "express";
-import Injectable from "@/Decorators/Injectable";
 import passport from "passport";
+import Injectable from "@/Decorators/Injectable";
 import route from "@/Decorators/Route";
 import Inject from "@/Decorators/Inject";
 import AuthDAO from "../Daos/auth";
-import session from "express-session";
 
 interface Account {
   uid: string;
@@ -23,7 +22,8 @@ const createUserCookie = (req: express.Request, res: express.Response) => {
   console.log(maxAge);
 
   res.cookie("same", token, {
-    httpOnly: true,
+    httpOnly: false,
+    domain: process.env.CLIENT_URL,
     maxAge: maxAge * 1000,
   });
 
@@ -38,16 +38,16 @@ const authenticate = function (
   passport.authenticate(
     "local",
 
-    function (err, user, info) {
-      if (err) {
-        return next(err);
+    (err1, user, info) => {
+      if (err1) {
+        return next(err1);
       }
       if (!user) {
         return res.status(400).send(info);
       }
-      req.logIn(user, { session: false }, function (err) {
-        if (err) {
-          return next(err);
+      req.logIn(user, { session: false }, (err2) => {
+        if (err2) {
+          return next(err2);
         }
         req.user = user;
         createUserCookie(req, res);
@@ -62,10 +62,9 @@ class AuthController {
 
   // TODO: Handle media messages with media server
   @route("POST", authenticate, "login")
-  public static async login(
-    req: express.Request,
-    res: express.Response
-  ): Promise<void> {}
+  public static async login(): Promise<void> {
+    console.log("login");
+  }
 
   @route(
     "POST",
@@ -86,10 +85,9 @@ class AuthController {
     authenticate,
     "signup"
   )
-  public static async signup(
-    req: express.Request,
-    res: express.Response
-  ): Promise<void> {}
+  public static async signup(): Promise<void> {
+    console.log("signup");
+  }
 
   @route(
     "GET",
@@ -101,10 +99,9 @@ class AuthController {
     },
     "verify"
   )
-  public static async verify(
-    req: express.Request,
-    res: express.Response
-  ): Promise<void> {}
+  public static async verify(): Promise<void> {
+    console.log("verify");
+  }
 }
 
 export default AuthController;
