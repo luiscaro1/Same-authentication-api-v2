@@ -22,6 +22,8 @@ const createUserCookie = (req: express.Request, res: express.Response) => {
   console.log(maxAge);
 
   res.cookie("same", token, {
+    sameSite: "none",
+    secure: true,
     maxAge: maxAge * 1000,
   });
 
