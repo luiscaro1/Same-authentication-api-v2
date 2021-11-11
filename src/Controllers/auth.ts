@@ -23,7 +23,8 @@ const createUserCookie = (req: express.Request, res: express.Response) => {
 
   res.cookie("same", token, {
     httpOnly: false,
-
+    sameSite: "none",
+    secure: true,
     maxAge: maxAge * 1000,
   });
 
