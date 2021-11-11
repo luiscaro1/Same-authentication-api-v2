@@ -22,7 +22,8 @@
     ],
     "*.+(json|css|md)": [
       "prettier --write"
-    ]
+    ],
+    "*.js": "eslint --cache --fix"
   },
   "repository": {
     "type": "git",
