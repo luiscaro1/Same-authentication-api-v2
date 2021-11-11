@@ -21,6 +21,7 @@ const createUserCookie = (req: express.Request, res: express.Response) => {
   const { token, accountInfo, maxAge } = req.user as Info;
 
   res.cookie("same", token, {
+    domain: process.env.CLIENT_URL as string,
     sameSite: "none",
     secure: true,
     httpOnly: true,
