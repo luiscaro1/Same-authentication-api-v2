@@ -1,0 +1,12 @@
+FROM node:14.17.6-buster-slim
+
+WORKDIR /app
+
+COPY . /app/
+
+RUN npm i
+
+ENV CLIENT_URL http://localhost:3000
+ENV SECRET=SameCapstoneProject
+
+CMD npm run webpack-dev --bind:0.0.0.0
