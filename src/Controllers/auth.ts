@@ -19,11 +19,11 @@ interface Info {
 
 const createUserCookie = (req: express.Request, res: express.Response) => {
   const { token, accountInfo, maxAge } = req.user as Info;
-  console.log(maxAge);
 
   res.cookie("same", token, {
     sameSite: "none",
     secure: true,
+    httpOnly: true,
     maxAge: maxAge * 1000,
   });
 
