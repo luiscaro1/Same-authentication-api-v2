@@ -9,7 +9,7 @@ COPY dist/prod.js /app/
 
 ENV NODE_ENV production
 ENV BUILD WEBPACK
-ENV CLIENT_URL https://same-client-ui.vercel.app
+ENV CLIENT_URL https://www.samelfg.com
 ENV SECRET=SameCapstoneProject
 
 CMD node prod.js --bind:0.0.0.0
