@@ -20,15 +20,16 @@ interface Info {
 const createUserCookie = (req: express.Request, res: express.Response) => {
   const { token, accountInfo, maxAge } = req.user as Info;
 
-  res.cookie("same", token, {
-    domain: process.env.CLIENT_URL as string,
-    sameSite: "none",
-    secure: true,
-    httpOnly: true,
-    maxAge: maxAge * 1000,
-  });
+  console.log(token);
 
-  res.json(accountInfo);
+  // res.cookie("same", token, {
+  //   sameSite: "none",
+  //   secure: true,
+  //   httpOnly: true,
+  //   maxAge: maxAge * 1000,
+  // });
+
+  res.json({ accountInfo, token });
 };
 
 const authenticate = function (
