@@ -20,8 +20,6 @@ interface Info {
 const createUserCookie = (req: express.Request, res: express.Response) => {
   const { token, accountInfo, maxAge } = req.user as Info;
 
-  console.log(token);
-
   // res.cookie("same", token, {
   //   sameSite: "none",
   //   secure: true,
@@ -92,7 +90,7 @@ class AuthController {
   }
 
   @route(
-    "GET",
+    "POST",
     passport.authenticate("jwt", { session: false }),
     (req: express.Request, res: express.Response) => {
       if (req.user) res.json(req.user);

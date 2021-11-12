@@ -1,18 +1,19 @@
 import passport from "passport";
 import { Strategy } from "passport-jwt";
+import jwt from "jsonwebtoken";
 import AuthDAO from "@/Daos/auth";
 import Injectable from "@/Decorators/Injectable";
 import Inject from "@/Decorators/Inject";
-import jwt from "jsonwebtoken";
 
 @Injectable("jWTStrategy")
 class JWTStrategy {
   @Inject("authDAO") public static authDAO: AuthDAO;
+
   // extract token from cookie
   public static cookieExtractor = (req: any) => {
     let token = null;
-    if (req && req.cookies) {
-      token = req.cookies.same;
+    if (req && req.body) {
+      token = req.body.cookie;
     }
     return token;
   };
