@@ -17,6 +17,12 @@ interface Info {
   maxAge: number;
 }
 
+// interface ModInfo{
+//   uid:string;
+//   user_name:string;
+//   password:string;
+// }
+
 const createUserCookie = (req: express.Request, res: express.Response) => {
   const { token, accountInfo, maxAge } = req.user as Info;
 
@@ -101,6 +107,54 @@ class AuthController {
   )
   public static async verify(): Promise<void> {
     console.log("verify");
+  }
+
+  // THIS WORKSSSSSS
+  @route("DELETE", ":id")
+  public static async deleteAccount(
+    req: express.Request,
+    res: express.Response
+  ): Promise<void> {
+    try {
+      await AuthController.authDAO.deleteAccount(req.params.id as any);
+      res.status(200).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+
+  // THis works but needs to be modify for the dashboard , must add bio to user table
+  @route("GET", ":user_name")
+  public static async getAccountByUsername(
+    req: express.Request,
+    res: express.Response
+  ) {
+    try {
+      const result = await AuthController.authDAO.getAccountByUsername(
+        req.params.user_name as any
+      );
+      res.json(result).status(200).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+
+  // Works but needs to be modified so you dont need to write the uid
+  @route("PUT", "update")
+  public static async updateAccount(
+    req: express.Request,
+    res: express.Response
+  ) {
+    // const id=parseInt(req.params.id)
+    // const {uid,user_name,password } = req.body as ModInfo
+    try {
+      const result = await AuthController.authDAO.updateAccount(
+        req.body as any
+      );
+      res.json(result).status(200).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
   }
 }
 
