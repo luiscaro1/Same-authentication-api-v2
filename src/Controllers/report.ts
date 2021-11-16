@@ -4,15 +4,6 @@ import route from "@/Decorators/Route";
 import Inject from "@/Decorators/Inject";
 import ReportDAO from "../Daos/report";
 
-interface User {
-  uid: string;
-  uid2: string;
-}
-
-interface Info {
-  reportInfo: User;
-}
-
 @Injectable("reportController")
 class ReportController {
   @Inject("reportDAO") public static reportDAO: ReportDAO;
@@ -28,17 +19,13 @@ class ReportController {
       const result = await ReportController.reportDAO.reportUser(
         req.body as any
       );
-      if (req.body.uid !== req.body.uid2) {
-        res.json(result).status(201).end();
-      } else {
-        console.log("Cannot report yourself");
-      }
+      res.json(result).status(201).end();
     } catch (err) {
       res.status(400).send({ message: "Oops try again " });
     }
   }
 
-  // admin only
+  // Admin only
   @route("GET", "allreports")
   public static async getallReports(
     req: express.Request,

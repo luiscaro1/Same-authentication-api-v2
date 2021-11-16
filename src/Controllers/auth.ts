@@ -117,7 +117,7 @@ class AuthController {
   ): Promise<void> {
     try {
       await AuthController.authDAO.deleteAccount(req.params.id as any);
-      res.status(200).end();
+      res.json("Account has been deleted").status(200).end();
     } catch (err) {
       res.status(400).send(err);
     }
