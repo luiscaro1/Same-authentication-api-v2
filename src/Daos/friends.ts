@@ -52,11 +52,11 @@ class FriendsDAO {
     return unfriend;
   }
 
-  // funciona pero por alguna razon no quiere funcionar lo de row[0]
   public async getallfriends({ uid }: id): Promise<Array<GAF>> {
-    //
-    const gaf = await this.dbContext.db.raw(`select * from "Friends"
-        where uid='${uid}' or uid2='${uid}' and is_friend=true`); // .get('rows')
+    const gaf = (
+      await this.dbContext.db.raw(`select * from "Friends"
+        where uid='${uid}' or uid2='${uid}' and is_friend=true`)
+    ).rows;
 
     return gaf;
   }
