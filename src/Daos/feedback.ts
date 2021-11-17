@@ -5,14 +5,6 @@ import Inject from "@/Decorators/Inject";
 import Injectable from "@/Decorators/Injectable";
 import DbContext from "@/Db/Index";
 
-// interface AccountBody {
-//   user_name: string;
-//   password: string;
-//   email: string;
-//   first_name: string;
-//   last_name: string;
-// }
-
 interface FeedbackBody {
   email: string;
   websitedesign: string;
@@ -48,7 +40,6 @@ class FeedbackDAO {
     rateoverall,
   }: FeedbackBody) {
     const db = await this.dbContext.db;
-    // const feedback = await db.raw(`insert values('${email}','${websitedesign}','${ratedesign}','${websitefunctionality}','${ratefunctionality}','${gameavailable}','${rategames}','${generalinformation}','${rateoverall}')into "Feedback" returning "*"`);
     const feedback = await db
       .insert({
         email,
