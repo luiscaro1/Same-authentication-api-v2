@@ -41,25 +41,25 @@ class FriendsDAO {
     return friend;
   }
 
-  public async unfriend({ uid, uid2 }: FriendsBody) {
-    const unfriend = (
-      await this.dbContext.db.raw(`update "Friends" set is_friend = false 
-        where uid ='${uid}' and uid2 = '${uid2}' and is_friend=True
-        or uid ='${uid2}' and uid2 ='${uid}' and is_friend=True
-        returning *`)
-    ).rows[0];
+  //   public async unfriend({ uid, uid2 }: FriendsBody) {
+  //     const unfriend = (
+  //       await this.dbContext.db.raw(`update "Friends" set is_friend = false
+  //         where uid ='${uid}' and uid2 = '${uid2}' and is_friend=True
+  //         or uid ='${uid2}' and uid2 ='${uid}' and is_friend=True
+  //         returning *`)
+  //     ).rows[0];
 
-    return unfriend;
-  }
+  //     return unfriend;
+  //   }
 
-  public async getallfriends({ uid }: id): Promise<Array<GAF>> {
-    const gaf = (
-      await this.dbContext.db.raw(`select * from "Friends"
-        where uid='${uid}' or uid2='${uid}' and is_friend=true`)
-    ).rows; // .get('rows')
+  //   // funciona pero por alguna razon no quiere funcionar lo de row[0]
+  //   public async getallfriends({ uid }: id): Promise<Array<GAF>> {
+  //     //
+  //     const gaf = await this.dbContext.db.raw(`select * from "Friends"
+  //         where uid='${uid}' or uid2='${uid}' and is_friend=true`); // .get('rows')
 
-    return gaf;
-  }
+  //     return gaf;
+  //   }
 }
 
 export default FriendsDAO;
