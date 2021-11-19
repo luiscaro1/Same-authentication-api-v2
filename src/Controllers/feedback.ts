@@ -1,5 +1,4 @@
-import express, { request } from "express";
-import passport from "passport";
+import express from "express";
 import Injectable from "@/Decorators/Injectable";
 import route from "@/Decorators/Route";
 import Inject from "@/Decorators/Inject";

@@ -1,25 +1,19 @@
 /* eslint-disable camelcase */
-import bcrypt from "bcryptjs";
-import { stringify } from "qs";
 import Inject from "@/Decorators/Inject";
 import Injectable from "@/Decorators/Injectable";
 import DbContext from "@/Db/Index";
 
 interface FriendsBody {
-  uid: string;
-  uid2: string;
-}
-
-interface id {
-  uid: string;
-}
-
-interface GAF {
-  // get all friends
   fid: string;
   uid: string;
   uid2: string;
   is_friend: boolean;
+}
+interface BlockBody {
+  fid: string;
+  uid: string;
+  uid2: string;
+  is_blocked: boolean;
 }
 
 @Injectable("friendsDAO")
@@ -52,13 +46,68 @@ class FriendsDAO {
     return unfriend;
   }
 
-  public async getallfriends({ uid }: id): Promise<Array<GAF>> {
+  public async getallfriends({
+    uid,
+  }: FriendsBody): Promise<Array<FriendsBody>> {
     const gaf = (
       await this.dbContext.db.raw(`select * from "Friends"
         where uid='${uid}' or uid2='${uid}' and is_friend=true`)
     ).rows;
 
     return gaf;
+  }
+
+  public async checkiffriends({ uid, uid2 }: FriendsBody) {
+    const check = (
+      await this.dbContext.db.raw(`select is_friend from "Friends"
+      where uid='${uid}' and uid2='${uid2}'
+      or uid='${uid2}' and uid2='${uid}'`)
+    ).rows;
+
+    if (check[0]) {
+      return check[0]?.is_friend;
+    }
+
+    return null;
+  }
+
+  public async checkifnotfriends({ uid, uid2 }: FriendsBody) {
+    const check = (
+      await this.dbContext.db.raw(`select is_friend from "Friends"
+      where uid='${uid}' and uid2='${uid2}'
+      or uid='${uid2}' and uid2='${uid}'`)
+    ).rows;
+
+    if (check[0]) {
+      return check[0]?.is_friend;
+    }
+
+    return null;
+  }
+
+  public async refriend({ uid, uid2 }: FriendsBody) {
+    const refriend = (
+      await this.dbContext.db.raw(`update "Friends" set is_friend = true 
+        where uid ='${uid}' and uid2 = '${uid2}' and is_friend=false
+        or uid ='${uid2}' and uid2 = '${uid}' and is_friend=false
+        returning *`)
+    ).rows[0];
+
+    return refriend;
+  }
+
+  public async checkifblocked({ uid, uid2 }: BlockBody) {
+    const check = (
+      await this.dbContext.db.raw(`select is_blocked from "Block"
+      where uid='${uid}' and uid2='${uid2}'
+      or uid='${uid2}' and uid2='${uid}'`)
+    ).rows;
+
+    if (check[0]) {
+      return check[0]?.is_blocked;
+    }
+
+    return null;
   }
 }
 
