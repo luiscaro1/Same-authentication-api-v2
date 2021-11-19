@@ -16,6 +16,19 @@ interface ReportBody {
   pretending: boolean;
 }
 
+interface ModBod {
+  uid: string;
+  user_name: string;
+  stalking: boolean;
+  spamming: boolean;
+  offensive: boolean;
+  harrasment: boolean;
+  discrimination: boolean;
+  viruses: boolean;
+  violationofIp: boolean;
+  pretending: boolean;
+}
+
 @Injectable("reportDAO")
 class ReportDAO {
   @Inject("dbContext") public dbContext!: DbContext;
@@ -33,7 +46,7 @@ class ReportDAO {
 
   public async reportUser({
     uid,
-    uid2,
+    user_name,
     stalking,
     spamming,
     offensive,
@@ -42,8 +55,11 @@ class ReportDAO {
     viruses,
     violationofIp,
     pretending,
-  }: ReportBody) {
+  }: ModBod) {
     const db = await this.dbContext.db;
+    const uid2 = (
+      await db.raw(`select uid from "User" where user_name='${user_name}'`)
+    ).rows[0].uid;
     const result = await db
       .insert({
         uid,

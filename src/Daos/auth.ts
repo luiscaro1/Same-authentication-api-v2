@@ -10,6 +10,7 @@ interface AccountBody {
   email: string;
   first_name: string;
   last_name: string;
+  is_active: boolean;
 }
 
 // interface UserBody{
@@ -46,6 +47,7 @@ class AuthDAO {
     first_name,
     last_name,
   }: AccountBody) {
+    const is_active = true;
     const db = await this.dbContext.db;
     const hp = await bcrypt.hash(password, 10);
 
@@ -56,6 +58,7 @@ class AuthDAO {
         password: hp,
         first_name,
         last_name,
+        is_active,
       })
       .into("User")
       .returning("*");

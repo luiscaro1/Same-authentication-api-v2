@@ -9,7 +9,7 @@ class ReportController {
   @Inject("reportDAO") public static reportDAO: ReportDAO;
   // TODO: Reporting a user
 
-  // might now be working because the report table is not generating the rid
+  // might not be working because the report table is not generating the rid
   @route("POST", "add")
   public static async reporting(
     req: express.Request,

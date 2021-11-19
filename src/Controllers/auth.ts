@@ -110,7 +110,7 @@ class AuthController {
   }
 
   // THIS WORKSSSSSS
-  @route("DELETE", ":id")
+  @route("DELETE", "delete/:id")
   public static async deleteAccount(
     req: express.Request,
     res: express.Response
@@ -124,7 +124,7 @@ class AuthController {
   }
 
   // THis works but needs to be modify for the dashboard , must add bio to user table
-  @route("GET", ":user_name")
+  @route("GET", "user/:user_name")
   public static async getAccountByUsername(
     req: express.Request,
     res: express.Response
@@ -139,7 +139,6 @@ class AuthController {
     }
   }
 
-  // Works but needs to be modified so you dont need to write the uid
   @route("PUT", "update")
   public static async updateAccount(
     req: express.Request,
