@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
+import bcrypt from "bcryptjs";
 import Inject from "@/Decorators/Inject";
 import Injectable from "@/Decorators/Injectable";
 import DbContext from "@/Db/Index";
-import bcrypt from "bcryptjs";
 
 interface AccountBody {
   user_name: string;
@@ -10,6 +10,13 @@ interface AccountBody {
   email: string;
   first_name: string;
   last_name: string;
+  is_active: boolean;
+}
+
+interface ModUser {
+  uid: string;
+  user_name: string;
+  password: string;
 }
 
 @Injectable("authDAO")
@@ -35,20 +42,58 @@ class AuthDAO {
     first_name,
     last_name,
   }: AccountBody) {
+    const is_active = true;
+    const db = await this.dbContext.db;
+    // test for password
+    const ctsc = /[^A-Za-z0-9]/; // used to check for special characters
+    const ctu = /[A-Z]/; // used to check for uppercase letter
+    const ctl = /[a-z]/; // used to check for lowercase letter
+    const ctn = /[0-9]/; // used to check for numbers
+    if (
+      password.length > 7 &&
+      ctsc.test(password) &&
+      ctu.test(password) &&
+      ctl.test(password) &&
+      ctn.test(password)
+    ) {
+      const hp = await bcrypt.hash(password, 10);
+      const user = await db
+        .insert({
+          user_name,
+          email,
+          password: hp,
+          first_name,
+          last_name,
+          is_active,
+        })
+        .into("User")
+        .returning("*");
+
+      return user;
+    }
+
+    return null;
+  }
+
+  public async deleteAccount(uid: string) {
+    const db = await this.dbContext.db;
+    const query = `update "User" set is_active=false where uid='${uid}' returning *`;
+    const user = (await db.raw(query)).rows[0];
+    return user;
+  }
+
+  public async getAccountByUsername(user_name: string) {
+    const db = await this.dbContext.db;
+    const query = `select * from "User" where user_name='${user_name}' and is_active=true`;
+    const user = (await db.raw(query)).rows[0];
+    return user;
+  }
+
+  public async updateAccount({ user_name, password, uid }: ModUser) {
     const db = await this.dbContext.db;
     const hp = await bcrypt.hash(password, 10);
-
-    const user = await db
-      .insert({
-        user_name,
-        email,
-        password: hp,
-        first_name,
-        last_name,
-      })
-      .into("User")
-      .returning("*");
-
+    const query = `update "User" set user_name='${user_name}', password='${hp}'where uid='${uid}' returning *`;
+    const user = (await db.raw(query)).rows[0];
     return user;
   }
 }

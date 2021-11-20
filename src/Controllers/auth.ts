@@ -102,6 +102,53 @@ class AuthController {
   public static async verify(): Promise<void> {
     console.log("verify");
   }
+
+  // THIS WORKSSSSSS
+  @route("DELETE", "delete/:id")
+  public static async deleteAccount(
+    req: express.Request,
+    res: express.Response
+  ): Promise<void> {
+    try {
+      await AuthController.authDAO.deleteAccount(req.params.id as any);
+      res.json("Account has been deleted").status(200).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+
+  // THis works but needs to be modify for the dashboard , must add bio to user table
+  @route("GET", "user/:user_name")
+  public static async getAccountByUsername(
+    req: express.Request,
+    res: express.Response
+  ) {
+    try {
+      const result = await AuthController.authDAO.getAccountByUsername(
+        req.params.user_name as any
+      );
+      res.json(result).status(200).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+
+  @route("PUT", "update")
+  public static async updateAccount(
+    req: express.Request,
+    res: express.Response
+  ) {
+    // const id=parseInt(req.params.id)
+    // const {uid,user_name,password } = req.body as ModInfo
+    try {
+      const result = await AuthController.authDAO.updateAccount(
+        req.body as any
+      );
+      res.json(result).status(200).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
 }
 
 export default AuthController;
