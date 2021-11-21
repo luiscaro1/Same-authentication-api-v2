@@ -38,17 +38,22 @@ class FeedbackDAO {
     rateoverall,
   }: FeedbackBody) {
     const db = await this.dbContext.db;
+    // added to match with the front end
+    const rd = <number>ratedesign * 2;
+    const rf = <number>ratefunctionality * 2;
+    const rg = <number>rategames * 2;
+    const ro = <number>rateoverall * 2;
     const feedback = await db
       .insert({
         email,
         websitedesign,
-        ratedesign,
+        ratedesign: rd,
         websitefunctionality,
-        ratefunctionality,
+        ratefunctionality: rf,
         gameavailable,
-        rategames,
+        rategames: rg,
         generalinformation,
-        rateoverall,
+        rateoverall: ro,
       })
       .into("Feedback")
       .returning("*");
