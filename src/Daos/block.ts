@@ -15,8 +15,12 @@ interface BlockBody {
 class BlockDAO {
   @Inject("dbContext") public dbContext!: DbContext;
 
-  public async blockuser({ uid, uid2 }: BlockBody) {
+  public async blockuser({ uid }: BlockBody, user_name: string) {
     const is_blocked = true;
+    const uid2 = (
+      await this.dbContext.db.raw(`select uid from "User" 
+    where user_name='${user_name}'`)
+    ).rows[0].uid;
     const db = await this.dbContext.db;
     const block = await db
       .insert({
@@ -30,7 +34,11 @@ class BlockDAO {
     return block;
   }
 
-  public async unblock({ uid, uid2 }: BlockBody) {
+  public async unblock({ uid }: BlockBody, user_name: string) {
+    const uid2 = (
+      await this.dbContext.db.raw(`select uid from "User" 
+    where user_name='${user_name}'`)
+    ).rows[0].uid;
     const unblock = (
       await this.dbContext.db.raw(`update "Block" set is_blocked = false 
         where uid ='${uid}' and uid2 = '${uid2}' and is_blocked=True
@@ -58,7 +66,12 @@ class BlockDAO {
     return gab;
   }
 
-  public async unfriend({ uid, uid2 }: BlockBody) {
+  // used for when you block a user
+  public async unfriend({ uid }: BlockBody, user_name: string) {
+    const uid2 = (
+      await this.dbContext.db.raw(`select uid from "User" 
+    where user_name='${user_name}'`)
+    ).rows[0].uid;
     const unfriend = (
       await this.dbContext.db.raw(`update "Friends" set is_friend = false 
         where uid ='${uid}' and uid2 = '${uid2}' and is_friend=True
@@ -69,7 +82,13 @@ class BlockDAO {
     return unfriend;
   }
 
-  public async checkifblock({ uid, uid2 }: BlockBody) {
+  // all of the middleware daos
+
+  public async checkifblock({ uid }: BlockBody, user_name: string) {
+    const uid2 = (
+      await this.dbContext.db.raw(`select uid from "User" 
+    where user_name='${user_name}'`)
+    ).rows[0].uid;
     const check = (
       await this.dbContext.db.raw(`select is_blocked from "Block"
       where uid='${uid}' and uid2='${uid2}'`)
@@ -82,7 +101,11 @@ class BlockDAO {
     return null;
   }
 
-  public async checkifunblock({ uid, uid2 }: BlockBody) {
+  public async checkifunblock({ uid }: BlockBody, user_name: string) {
+    const uid2 = (
+      await this.dbContext.db.raw(`select uid from "User" 
+    where user_name='${user_name}'`)
+    ).rows[0].uid;
     const check = (
       await this.dbContext.db.raw(`select is_blocked from "Block"
       where uid='${uid}' and uid2='${uid2}'`)
@@ -95,7 +118,11 @@ class BlockDAO {
     return null;
   }
 
-  public async reblock({ uid, uid2 }: BlockBody) {
+  public async reblock({ uid }: BlockBody, user_name: string) {
+    const uid2 = (
+      await this.dbContext.db.raw(`select uid from "User" 
+    where user_name='${user_name}'`)
+    ).rows[0].uid;
     const reblock = (
       await this.dbContext.db.raw(`update "Block" set is_blocked = true 
         where uid ='${uid}' and uid2 = '${uid2}' and is_blocked=false

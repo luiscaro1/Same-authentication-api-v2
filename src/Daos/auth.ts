@@ -72,7 +72,7 @@ class AuthDAO {
       return user;
     }
 
-    return null;
+    return "invalid password";
   }
 
   public async deleteAccount(uid: string) {

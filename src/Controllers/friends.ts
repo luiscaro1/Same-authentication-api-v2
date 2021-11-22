@@ -15,16 +15,21 @@ class FriendsController {
     next: express.NextFunction
   ) => {
     const is_blocked = await FriendsController.friendsDAO.checkifblocked(
-      req.body as any
+      req.body as any,
+      req.params.user_name as any
     );
     if (is_blocked === true) {
       return res.status(400).send("blocked user or user has you blocked").end();
     }
     const is_friend = await FriendsController.friendsDAO.checkiffriends(
-      req.body as any
+      req.body as any,
+      req.params.user_name as any
     );
     if (is_friend === false) {
-      const re = await FriendsController.friendsDAO.refriend(req.body as any);
+      const re = await FriendsController.friendsDAO.refriend(
+        req.body as any,
+        req.params.user_name as any
+      );
       res.json(re);
     } else if (is_friend === true) {
       return res
@@ -43,7 +48,8 @@ class FriendsController {
     next: express.NextFunction
   ) => {
     const is_friend = await FriendsController.friendsDAO.checkifnotfriends(
-      req.body as any
+      req.body as any,
+      req.params.user_name as any
     );
     if (is_friend === false) {
       return res.status(400).send("you are not friends with this user").end();
@@ -53,14 +59,15 @@ class FriendsController {
   };
 
   // Friends routes
-  @route("POST", FriendsController.checkiffriends, "addfriend")
+  @route("POST", FriendsController.checkiffriends, "addfriend/:user_name")
   public static async addfriend(
     req: express.Request,
     res: express.Response
   ): Promise<void> {
     try {
       const post = await FriendsController.friendsDAO.addFriends(
-        req.body as any
+        req.body as any,
+        req.params.user_name as any
       );
 
       res.json(post).status(201).end();
@@ -69,13 +76,16 @@ class FriendsController {
     }
   }
 
-  @route("DELETE", FriendsController.checkifnotfriends, "unfriend")
+  @route("DELETE", FriendsController.checkifnotfriends, "unfriend/:user_name")
   public static async unfriend(
     req: express.Request,
     res: express.Response
   ): Promise<void> {
     try {
-      const post = await FriendsController.friendsDAO.unfriend(req.body as any);
+      const post = await FriendsController.friendsDAO.unfriend(
+        req.body as any,
+        req.params.user_name as any
+      );
 
       res.json(post).status(201).end();
     } catch (err) {

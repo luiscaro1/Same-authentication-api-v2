@@ -74,7 +74,18 @@ class AuthController {
       next: express.NextFunction
     ) => {
       try {
-        await AuthController.authDAO.createAccount(req.body as any);
+        const check = await AuthController.authDAO.createAccount(
+          req.body as any
+        );
+        if (check === "invalid password") {
+          return res
+            .status(400)
+            .send(
+              "invalid password, password must contain: minimum 8 characers, 1 upper case letter, 1 lower case letter, a number, and a special character"
+            )
+            .end();
+        }
+
         next();
       } catch (err) {
         res
