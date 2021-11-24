@@ -65,6 +65,19 @@ class FriendsDAO {
     return gaf;
   }
 
+  public async getfriendcount({
+    uid,
+  }: FriendsBody): Promise<Array<FriendsBody>> {
+    const gfc = (
+      await this.dbContext.db.raw(`select count(*)
+      from "Friends"
+      where uid='${uid}' and is_friend = true
+      or uid2 = '${uid}' and is_friend = true`)
+    ).rows[0].count;
+
+    return gfc;
+  }
+
   // all of the middleware daos
 
   public async checkiffriends({ uid }: FriendsBody, user_name: string) {

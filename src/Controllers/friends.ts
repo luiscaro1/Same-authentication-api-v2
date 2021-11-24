@@ -108,6 +108,22 @@ class FriendsController {
       res.status(400).send(err);
     }
   }
+
+  @route("GET", "friendcount")
+  public static async getfriendcount(
+    req: express.Request,
+    res: express.Response
+  ): Promise<void> {
+    try {
+      const count = await FriendsController.friendsDAO.getfriendcount(
+        req.body as any
+      );
+
+      res.json(count).status(201).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
 }
 
 export default FriendsController;

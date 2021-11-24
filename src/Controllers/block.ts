@@ -118,6 +118,22 @@ class BlockController {
       res.status(400).send(err);
     }
   }
+
+  @route("GET", "blockcount")
+  public static async getblockcount(
+    req: express.Request,
+    res: express.Response
+  ): Promise<void> {
+    try {
+      const count = await BlockController.blockDAO.getblockcount(
+        req.body as any
+      );
+
+      res.json(count).status(201).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
 }
 
 export default BlockController;
