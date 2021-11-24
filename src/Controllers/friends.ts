@@ -76,7 +76,7 @@ class FriendsController {
     }
   }
 
-  @route("DELETE", FriendsController.checkifnotfriends, "unfriend/:user_name")
+  @route("PUT", FriendsController.checkifnotfriends, "unfriend/:user_name")
   public static async unfriend(
     req: express.Request,
     res: express.Response

@@ -72,7 +72,7 @@ class BlockController {
     }
   }
 
-  @route("DELETE", BlockController.checkifunblocked, "unblock/:user_name")
+  @route("PUT", BlockController.checkifunblocked, "unblock/:user_name")
   public static async unblock(
     req: express.Request,
     res: express.Response
