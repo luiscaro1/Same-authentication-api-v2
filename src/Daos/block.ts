@@ -82,6 +82,16 @@ class BlockDAO {
     return unfriend;
   }
 
+  public async getblockcount({ uid }: BlockBody): Promise<Array<BlockBody>> {
+    const gbc = (
+      await this.dbContext.db.raw(`select count(*)
+      from "Block"
+      where uid='${uid}' and is_blocked = true`)
+    ).rows[0].count;
+
+    return gbc;
+  }
+
   // all of the middleware daos
 
   public async checkifblock({ uid }: BlockBody, user_name: string) {
