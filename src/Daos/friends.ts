@@ -65,9 +65,7 @@ class FriendsDAO {
     return gaf;
   }
 
-  public async getfriendcount({
-    uid,
-  }: FriendsBody): Promise<Array<FriendsBody>> {
+  public async getfriendcount({ uid }: FriendsBody) {
     const gfc = (
       await this.dbContext.db.raw(`select count(*)
       from "Friends"

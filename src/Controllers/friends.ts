@@ -109,7 +109,7 @@ class FriendsController {
     }
   }
 
-  @route("GET", "friendcount")
+  @route("POST", "friendcount/")
   public static async getfriendcount(
     req: express.Request,
     res: express.Response

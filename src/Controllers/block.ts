@@ -119,7 +119,7 @@ class BlockController {
     }
   }
 
-  @route("GET", "blockcount")
+  @route("POST", "blockcount")
   public static async getblockcount(
     req: express.Request,
     res: express.Response

@@ -82,7 +82,7 @@ class BlockDAO {
     return unfriend;
   }
 
-  public async getblockcount({ uid }: BlockBody): Promise<Array<BlockBody>> {
+  public async getblockcount({ uid }: BlockBody) {
     const gbc = (
       await this.dbContext.db.raw(`select count(*)
       from "Block"
