@@ -149,11 +149,86 @@ class AuthController {
     req: express.Request,
     res: express.Response
   ) {
-    // const id=parseInt(req.params.id)
-    // const {uid,user_name,password } = req.body as ModInfo
     try {
       const result = await AuthController.authDAO.updateAccount(
         req.body as any
+      );
+      res.json(result).status(200).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+
+  @route("PUT", "update/user_name")
+  public static async updateUsername(
+    req: express.Request,
+    res: express.Response
+  ) {
+    try {
+      const result = await AuthController.authDAO.updateUsername(
+        req.body as any
+      );
+      res.json(result).status(200).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+
+  @route("PUT", "update/email")
+  public static async updateEmail(req: express.Request, res: express.Response) {
+    try {
+      const result = await AuthController.authDAO.updateEmail(req.body as any);
+      res.json(result).status(200).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+
+  @route("PUT", "update/password")
+  public static async updatePassword(
+    req: express.Request,
+    res: express.Response
+  ) {
+    try {
+      const result = await AuthController.authDAO.updatePassword(
+        req.body as any
+      );
+      if (result === "invalid password") {
+        return res
+          .status(400)
+          .send(
+            "invalid password, password must contain: minimum 8 characers, 1 upper case letter, 1 lower case letter, a number, and a special character"
+          )
+          .end();
+      }
+
+      res.json(result).status(200).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+
+  // @route("PUT", "update/bio")
+  // public static async updateBio(
+  //   req: express.Request,
+  //   res: express.Response
+  // ) {
+
+  //   try {
+  //     const result = await AuthController.authDAO.updateBio(
+  //       req.body as any
+  //     );
+  //     res.json(result).status(200).end();
+  //   } catch (err) {
+  //     res.status(400).send(err);
+  //   }
+  // }
+
+  @route("GET", "getemail/:user_name")
+  public static async getEmail(req: express.Request, res: express.Response) {
+    try {
+      const result = await AuthController.authDAO.getEmail(
+        req.params.user_name as any
       );
       res.json(result).status(200).end();
     } catch (err) {
