@@ -101,14 +101,14 @@ class AuthDAO {
   public async updateUsername({ uid, user_name }: ModUser) {
     const db = await this.dbContext.db;
     const query = `update "User" set user_name='${user_name}' where uid='${uid}' returning user_name`;
-    const name = (await db.raw(query)).rows[0];
+    const name = (await db.raw(query)).rows[0].user_name;
     return name;
   }
 
   public async updateEmail({ uid, email }: ModUser) {
     const db = await this.dbContext.db;
     const query = `update "User" set email='${email}' where uid='${uid}' returning email`;
-    const result = (await db.raw(query)).rows[0];
+    const result = (await db.raw(query)).rows[0].email;
     return result;
   }
 
