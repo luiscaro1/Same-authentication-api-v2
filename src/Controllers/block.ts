@@ -15,10 +15,14 @@ class BlockController {
     next: express.NextFunction
   ) => {
     const is_blocked = await BlockController.blockDAO.checkifblock(
-      req.body as any
+      req.body as any,
+      req.params.user_name as any
     );
     if (is_blocked === false) {
-      const re = await BlockController.blockDAO.reblock(req.body as any);
+      const re = await BlockController.blockDAO.reblock(
+        req.body as any,
+        req.params.user_name as any
+      );
       res.json(re);
     } else if (is_blocked === true) {
       return res.status(400).send("user is already blocked").end();
@@ -34,7 +38,8 @@ class BlockController {
     next: express.NextFunction
   ) => {
     const is_unblocked = await BlockController.blockDAO.checkifunblock(
-      req.body as any
+      req.body as any,
+      req.params.user_name as any
     );
 
     if (is_unblocked === false) {
@@ -45,15 +50,21 @@ class BlockController {
   };
 
   // block/unblock routes
-  @route("POST", BlockController.checkifblocked, "blockuser")
+  @route("POST", BlockController.checkifblocked, "blockuser/:user_name")
   public static async blockuser(
     req: express.Request,
     res: express.Response
   ): Promise<void> {
     try {
-      const post = await BlockController.blockDAO.blockuser(req.body as any);
+      const post = await BlockController.blockDAO.blockuser(
+        req.body as any,
+        req.params.user_name as any
+      );
       // si son friends after blocking it will automatically unfrind eachother
-      await BlockController.blockDAO.unfriend(req.body as any);
+      await BlockController.blockDAO.unfriend(
+        req.body as any,
+        req.params.user_name as any
+      );
 
       res.json(post).status(201).end();
     } catch (err) {
@@ -61,13 +72,16 @@ class BlockController {
     }
   }
 
-  @route("DELETE", BlockController.checkifunblocked, "unblock")
+  @route("PUT", BlockController.checkifunblocked, "unblock/:user_name")
   public static async unblock(
     req: express.Request,
     res: express.Response
   ): Promise<void> {
     try {
-      const post = await BlockController.blockDAO.unblock(req.body as any);
+      const post = await BlockController.blockDAO.unblock(
+        req.body as any,
+        req.params.user_name as any
+      );
 
       res.json(post).status(201).end();
     } catch (err) {
@@ -100,6 +114,22 @@ class BlockController {
       );
 
       res.json(all).status(201).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+
+  @route("POST", "blockcount")
+  public static async getblockcount(
+    req: express.Request,
+    res: express.Response
+  ): Promise<void> {
+    try {
+      const count = await BlockController.blockDAO.getblockcount(
+        req.body as any
+      );
+
+      res.json(count).status(201).end();
     } catch (err) {
       res.status(400).send(err);
     }

@@ -20,8 +20,12 @@ interface BlockBody {
 class FriendsDAO {
   @Inject("dbContext") public dbContext!: DbContext;
 
-  public async addFriends({ uid, uid2 }: FriendsBody) {
+  public async addFriends({ uid }: FriendsBody, user_name: string) {
     const is_friend = true;
+    const uid2 = (
+      await this.dbContext.db.raw(`select uid from "User" 
+    where user_name='${user_name}'`)
+    ).rows[0].uid;
     const db = await this.dbContext.db;
     const friend = await db
       .insert({
@@ -35,7 +39,11 @@ class FriendsDAO {
     return friend;
   }
 
-  public async unfriend({ uid, uid2 }: FriendsBody) {
+  public async unfriend({ uid }: FriendsBody, user_name: string) {
+    const uid2 = (
+      await this.dbContext.db.raw(`select uid from "User" 
+    where user_name='${user_name}'`)
+    ).rows[0].uid;
     const unfriend = (
       await this.dbContext.db.raw(`update "Friends" set is_friend = false 
         where uid ='${uid}' and uid2 = '${uid2}' and is_friend=True
@@ -57,7 +65,24 @@ class FriendsDAO {
     return gaf;
   }
 
-  public async checkiffriends({ uid, uid2 }: FriendsBody) {
+  public async getfriendcount({ uid }: FriendsBody) {
+    const gfc = (
+      await this.dbContext.db.raw(`select count(*)
+      from "Friends"
+      where uid='${uid}' and is_friend = true
+      or uid2 = '${uid}' and is_friend = true`)
+    ).rows[0].count;
+
+    return gfc;
+  }
+
+  // all of the middleware daos
+
+  public async checkiffriends({ uid }: FriendsBody, user_name: string) {
+    const uid2 = (
+      await this.dbContext.db.raw(`select uid from "User" 
+    where user_name='${user_name}'`)
+    ).rows[0].uid;
     const check = (
       await this.dbContext.db.raw(`select is_friend from "Friends"
       where uid='${uid}' and uid2='${uid2}'
@@ -71,7 +96,11 @@ class FriendsDAO {
     return null;
   }
 
-  public async checkifnotfriends({ uid, uid2 }: FriendsBody) {
+  public async checkifnotfriends({ uid }: FriendsBody, user_name: string) {
+    const uid2 = (
+      await this.dbContext.db.raw(`select uid from "User" 
+    where user_name='${user_name}'`)
+    ).rows[0].uid;
     const check = (
       await this.dbContext.db.raw(`select is_friend from "Friends"
       where uid='${uid}' and uid2='${uid2}'
@@ -85,7 +114,11 @@ class FriendsDAO {
     return null;
   }
 
-  public async refriend({ uid, uid2 }: FriendsBody) {
+  public async refriend({ uid }: FriendsBody, user_name: string) {
+    const uid2 = (
+      await this.dbContext.db.raw(`select uid from "User" 
+    where user_name='${user_name}'`)
+    ).rows[0].uid;
     const refriend = (
       await this.dbContext.db.raw(`update "Friends" set is_friend = true 
         where uid ='${uid}' and uid2 = '${uid2}' and is_friend=false
@@ -96,7 +129,11 @@ class FriendsDAO {
     return refriend;
   }
 
-  public async checkifblocked({ uid, uid2 }: BlockBody) {
+  public async checkifblocked({ uid }: BlockBody, user_name: string) {
+    const uid2 = (
+      await this.dbContext.db.raw(`select uid from "User" 
+    where user_name='${user_name}'`)
+    ).rows[0].uid;
     const check = (
       await this.dbContext.db.raw(`select is_blocked from "Block"
       where uid='${uid}' and uid2='${uid2}'
