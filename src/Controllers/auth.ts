@@ -208,26 +208,32 @@ class AuthController {
     }
   }
 
-  // @route("PUT", "update/bio")
-  // public static async updateBio(
-  //   req: express.Request,
-  //   res: express.Response
-  // ) {
-
-  //   try {
-  //     const result = await AuthController.authDAO.updateBio(
-  //       req.body as any
-  //     );
-  //     res.json(result).status(200).end();
-  //   } catch (err) {
-  //     res.status(400).send(err);
-  //   }
-  // }
+  @route("PUT", "update/bio")
+  public static async updateBio(req: express.Request, res: express.Response) {
+    try {
+      const result = await AuthController.authDAO.updateBio(req.body as any);
+      res.json(result).status(200).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
 
   @route("GET", "getemail/:user_name")
   public static async getEmail(req: express.Request, res: express.Response) {
     try {
       const result = await AuthController.authDAO.getEmail(
+        req.params.user_name as any
+      );
+      res.json(result).status(200).end();
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  }
+
+  @route("GET", "getbio/:user_name")
+  public static async getBio(req: express.Request, res: express.Response) {
+    try {
+      const result = await AuthController.authDAO.getBio(
         req.params.user_name as any
       );
       res.json(result).status(200).end();

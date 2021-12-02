@@ -11,6 +11,7 @@ interface AccountBody {
   first_name: string;
   last_name: string;
   is_active: boolean;
+  bio: string;
 }
 
 interface ModUser {
@@ -18,6 +19,7 @@ interface ModUser {
   user_name: string;
   password: string;
   email: string;
+  bio: string;
 }
 
 @Injectable("authDAO")
@@ -44,6 +46,7 @@ class AuthDAO {
     last_name,
   }: AccountBody) {
     const is_active = true;
+    const bio = "Welcome to Same. You can customize your bio in settings.";
     const db = await this.dbContext.db;
     // test for password
     const ctsc = /[^A-Za-z0-9]/; // used to check for special characters
@@ -66,6 +69,7 @@ class AuthDAO {
           first_name,
           last_name,
           is_active,
+          bio,
         })
         .into("User")
         .returning("*");
@@ -133,14 +137,14 @@ class AuthDAO {
 
     return "invalid password";
   }
-  // for when bio is added
-  // public async updateBio(bio:string){
-  //   const db = await this.dbContext.db;
-  //   const query = `update "User" set bio='${bio}' returning bio`;
-  //   const result = (await db.raw(query)).rows[0];
-  //   return result;
 
-  // }
+  // for when bio is added
+  public async updateBio({ uid, bio }: ModUser) {
+    const db = await this.dbContext.db;
+    const query = `update "User" set bio='${bio}' where uid='${uid}' returning bio`;
+    const result = (await db.raw(query)).rows[0].bio;
+    return result;
+  }
 
   // for settings
   public async getEmail(user_name: string) {
@@ -148,6 +152,13 @@ class AuthDAO {
     const query = `select email from "User" where user_name='${user_name}' and is_active=true`;
     const { email } = (await db.raw(query)).rows[0];
     return email;
+  }
+
+  public async getBio(user_name: string) {
+    const db = await this.dbContext.db;
+    const query = `select bio from "User" where user_name='${user_name}' and is_active=true`;
+    const { bio } = (await db.raw(query)).rows[0];
+    return bio;
   }
 }
 
