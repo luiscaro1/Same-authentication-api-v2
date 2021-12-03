@@ -19,7 +19,7 @@ class ReportController {
       const result = await ReportController.reportDAO.reportUser(
         req.body as any
       );
-      res.json(result).status(201).end();
+      res.json(result);
     } catch (err) {
       res.status(400).send({ message: "Oops try again " });
     }

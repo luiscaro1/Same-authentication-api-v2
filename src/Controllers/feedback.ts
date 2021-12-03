@@ -19,7 +19,7 @@ class FeedbackController {
         req.body as any
       );
 
-      res.json(post).status(201).end();
+      res.json(post);
     } catch (err) {
       res.status(400).send(err);
     }
@@ -33,7 +33,7 @@ class FeedbackController {
     try {
       const avg = await FeedbackController.feedbackDAO.getAvgFb();
 
-      res.json(avg).status(201).end();
+      res.json(avg);
     } catch (err) {
       res.status(400).send(err);
     }

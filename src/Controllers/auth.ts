@@ -18,14 +18,7 @@ interface Info {
 }
 
 const createUserCookie = (req: express.Request, res: express.Response) => {
-  const { token, accountInfo, maxAge } = req.user as Info;
-
-  // res.cookie("same", token, {
-  //   sameSite: "none",
-  //   secure: true,
-  //   httpOnly: true,
-  //   maxAge: maxAge * 1000,
-  // });
+  const { token, accountInfo } = req.user as Info;
 
   res.json({ accountInfo, token });
 };
@@ -80,9 +73,10 @@ class AuthController {
         if (check === "invalid password") {
           return res
             .status(400)
-            .send(
-              "invalid password, password must contain: minimum 8 characers, 1 upper case letter, 1 lower case letter, a number, and a special character"
-            )
+            .send({
+              message:
+                "invalid password, password must contain: minimum 8 characers, 1 upper case letter, 1 lower case letter, a number, and a special character",
+            })
             .end();
         }
 
@@ -122,7 +116,7 @@ class AuthController {
   ): Promise<void> {
     try {
       await AuthController.authDAO.deleteAccount(req.params.id as any);
-      res.json("Account has been deleted").status(200).end();
+      res.json("Account has been deleted");
     } catch (err) {
       res.status(400).send(err);
     }
@@ -138,7 +132,7 @@ class AuthController {
       const result = await AuthController.authDAO.getAccountByUsername(
         req.params.user_name as any
       );
-      res.json(result).status(200).end();
+      res.json(result);
     } catch (err) {
       res.status(400).send(err);
     }
@@ -153,7 +147,7 @@ class AuthController {
       const result = await AuthController.authDAO.updateAccount(
         req.body as any
       );
-      res.json(result).status(200).end();
+      res.json(result);
     } catch (err) {
       res.status(400).send(err);
     }
@@ -168,7 +162,7 @@ class AuthController {
       const result = await AuthController.authDAO.updateUsername(
         req.body as any
       );
-      res.json(result).status(200).end();
+      res.json(result);
     } catch (err) {
       res.status(400).send(err);
     }
@@ -178,7 +172,7 @@ class AuthController {
   public static async updateEmail(req: express.Request, res: express.Response) {
     try {
       const result = await AuthController.authDAO.updateEmail(req.body as any);
-      res.json(result).status(200).end();
+      res.json(result);
     } catch (err) {
       res.status(400).send(err);
     }
@@ -196,13 +190,14 @@ class AuthController {
       if (result === "invalid password") {
         return res
           .status(400)
-          .send(
-            "invalid password, password must contain: minimum 8 characers, 1 upper case letter, 1 lower case letter, a number, and a special character"
-          )
+          .send({
+            message:
+              "invalid password, password must contain: minimum 8 characers, 1 upper case letter, 1 lower case letter, a number, and a special character",
+          })
           .end();
       }
 
-      res.json(result).status(200).end();
+      res.json(result);
     } catch (err) {
       res.status(400).send(err);
     }
@@ -230,7 +225,7 @@ class AuthController {
       const result = await AuthController.authDAO.getEmail(
         req.params.user_name as any
       );
-      res.json(result).status(200).end();
+      res.json(result);
     } catch (err) {
       res.status(400).send(err);
     }

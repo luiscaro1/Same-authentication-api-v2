@@ -25,7 +25,7 @@ class BlockController {
       );
       res.json(re);
     } else if (is_blocked === true) {
-      return res.status(400).send("user is already blocked").end();
+      return res.status(400).send({ message: "user is already blocked" });
     } else {
       next();
     }
@@ -43,7 +43,7 @@ class BlockController {
     );
 
     if (is_unblocked === false) {
-      return res.status(400).send("user is not blocked").end();
+      return res.status(400).send({ message: "user is not blocked" }).end();
     }
 
     next();
@@ -66,7 +66,7 @@ class BlockController {
         req.params.user_name as any
       );
 
-      res.json(post).status(201).end();
+      res.json(post);
     } catch (err) {
       res.status(400).send(err);
     }
@@ -83,7 +83,7 @@ class BlockController {
         req.params.user_name as any
       );
 
-      res.json(post).status(201).end();
+      res.json(post);
     } catch (err) {
       res.status(400).send(err);
     }
@@ -113,7 +113,7 @@ class BlockController {
         req.body as any
       );
 
-      res.json(all).status(201).end();
+      res.json(all);
     } catch (err) {
       res.status(400).send(err);
     }
@@ -129,7 +129,7 @@ class BlockController {
         req.body as any
       );
 
-      res.json(count).status(201).end();
+      res.json(count);
     } catch (err) {
       res.status(400).send(err);
     }

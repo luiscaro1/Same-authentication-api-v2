@@ -19,7 +19,9 @@ class FriendsController {
       req.params.user_name as any
     );
     if (is_blocked === true) {
-      return res.status(400).send("blocked user or user has you blocked").end();
+      return res
+        .status(400)
+        .send({ message: "blocked user or user has you blocked" });
     }
     const is_friend = await FriendsController.friendsDAO.checkiffriends(
       req.body as any,
@@ -34,8 +36,7 @@ class FriendsController {
     } else if (is_friend === true) {
       return res
         .status(400)
-        .send("you are already friends with this user")
-        .end();
+        .send({ message: "you are already friends with this user" });
     } else {
       next();
     }
@@ -52,7 +53,9 @@ class FriendsController {
       req.params.user_name as any
     );
     if (is_friend === false) {
-      return res.status(400).send("you are not friends with this user").end();
+      return res
+        .status(400)
+        .send({ message: "you are not friends with this user" });
     }
 
     next();
@@ -70,7 +73,7 @@ class FriendsController {
         req.params.user_name as any
       );
 
-      res.json(post).status(201).end();
+      res.json(post);
     } catch (err) {
       res.status(400).send(err);
     }
@@ -87,7 +90,7 @@ class FriendsController {
         req.params.user_name as any
       );
 
-      res.json(post).status(201).end();
+      res.json(post);
     } catch (err) {
       res.status(400).send(err);
     }
@@ -103,7 +106,7 @@ class FriendsController {
         req.body as any
       );
 
-      res.json(all).status(201).end();
+      res.json(all);
     } catch (err) {
       res.status(400).send(err);
     }
@@ -119,7 +122,7 @@ class FriendsController {
         req.body as any
       );
 
-      res.json(count).status(201).end();
+      res.json(count);
     } catch (err) {
       res.status(400).send(err);
     }

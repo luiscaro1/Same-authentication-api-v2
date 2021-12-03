@@ -25,7 +25,7 @@ class AuthDAO {
   @Inject("dbContext") public dbContext!: DbContext;
 
   public async getAccountByFilter(fieldname: string, value: string) {
-    const db = await this.dbContext.db;
+    const { db } = this.dbContext;
 
     const query = `select * from "User" as U where U.${fieldname} = '${value}'`;
 
@@ -44,7 +44,7 @@ class AuthDAO {
     last_name,
   }: AccountBody) {
     const is_active = true;
-    const db = await this.dbContext.db;
+    const { db } = this.dbContext;
     // test for password
     const ctsc = /[^A-Za-z0-9]/; // used to check for special characters
     const ctu = /[A-Z]/; // used to check for uppercase letter
@@ -77,21 +77,22 @@ class AuthDAO {
   }
 
   public async deleteAccount(uid: string) {
-    const db = await this.dbContext.db;
+    const { db } = this.dbContext;
     const query = `update "User" set is_active=false where uid='${uid}' returning *`;
     const user = (await db.raw(query)).rows[0];
     return user;
   }
 
-  public async getAccountByUsername(user_name: string) {
-    const db = await this.dbContext.db;
+  public async getAccountByUsername(user_name: string): Promise<any> {
+    console.log(user_name);
+    const { db } = this.dbContext;
     const query = `select * from "User" where user_name='${user_name}' and is_active=true`;
     const user = (await db.raw(query)).rows[0];
     return user;
   }
 
   public async updateAccount({ user_name, password, uid }: ModUser) {
-    const db = await this.dbContext.db;
+    const { db } = this.dbContext;
     const hp = await bcrypt.hash(password, 10);
     const query = `update "User" set user_name='${user_name}', password='${hp}'where uid='${uid}' returning *`;
     const user = (await db.raw(query)).rows[0];
@@ -99,14 +100,14 @@ class AuthDAO {
   }
 
   public async updateUsername({ uid, user_name }: ModUser) {
-    const db = await this.dbContext.db;
+    const { db } = this.dbContext;
     const query = `update "User" set user_name='${user_name}' where uid='${uid}' returning user_name`;
     const name = (await db.raw(query)).rows[0].user_name;
     return name;
   }
 
   public async updateEmail({ uid, email }: ModUser) {
-    const db = await this.dbContext.db;
+    const { db } = this.dbContext;
     const query = `update "User" set email='${email}' where uid='${uid}' returning email`;
     const result = (await db.raw(query)).rows[0].email;
     return result;
@@ -124,7 +125,7 @@ class AuthDAO {
       ctl.test(password) &&
       ctn.test(password)
     ) {
-      const db = await this.dbContext.db;
+      const { db } = this.dbContext;
       const hp = await bcrypt.hash(password, 10);
       const query = `update "User" set password='${hp}'where uid='${uid}'`;
       const new_password = (await db.raw(query)).rows[0];
@@ -144,7 +145,7 @@ class AuthDAO {
 
   // for settings
   public async getEmail(user_name: string) {
-    const db = await this.dbContext.db;
+    const { db } = this.dbContext;
     const query = `select email from "User" where user_name='${user_name}' and is_active=true`;
     const { email } = (await db.raw(query)).rows[0];
     return email;
